@@ -1,0 +1,187 @@
+<!--
+The MIT License
+
+Copyright (c) 2010 Pere Villega Montenegro
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+-->
+<lift:surround with="default" at="content">
+    <lift:SimulatorTag.jhead />
+    <lift:SimulatorTag.jform>
+        <div id="bd">
+            <div id="yui-main">                
+                <div class="yui-b">
+                    <div id="info" class="yui-g">
+                        Welcome to the <b>Empires in Arms &copy; combat simulator</b>. This site will simulate a combat between two armies following the rules of the game.
+                        <u>Be aware that if you don't create the Corps following the templates of the game (i.e.: you mix cossacks with infantery in the same Corp or something similar)
+                        the results of the combat might not be reliable.</u> To that end, please introduce the data of the combatants organised in the same way as they will take part in
+                        the battle.<br/>
+                        <br/>
+                        The keys for the columns of the tables below are:
+                        <ul>
+                            <li><b>Commanders:</b> <u>S:</u> strategic rating, <u>T:</u> tactical rating, <u>MT:</u> tactical maximum rating, <u>S:</u> seniority</li>
+                            <li><b>Corps:</b> <u>G:</u> guard, <u>A:</u> artillery, <u>I:</u> infantery, <u>M:</u> militia, <u>C:</u> cavalry, <u>Ck:</u> cossacks/freikcorps, <u>Gr:</u> guerrilla, <u>Fi:</u> feudal infantery, <u>Fc:</u> feudal cavalry</li>
+                        </ul>
+                        <br/>
+                        Each commander and corp can be assigned to one group. There are 3 kind of groups: <u>M</u>ain, <u>O</u>utflank and <u>R</u>einforce.
+                        The reinforce armies are limited to 5 diferent groups, numbered from 1 to 5.
+                        By default all commanders and corps are assigned to the Main group.
+                        <br/>
+                        Due to the complexities of including Guard commitment in a battle, a series of limitations apply when this options is enabled:
+                        <ul>
+                            <li>- You will have to select the round in which the guard is used, and the shift ammount</li>
+                            <li>- Only this option will be considered in the simulation</li>
+                            <li>- If there are several corps with guard in the army, <b>the first one (closer to the top) will be used.</b></li>
+                            <li>- Previous point is <b>very important</b>, only this corp will be used for the calculations, including its nationality!</li>
+                        </ul>
+                    </div>
+                    <br/>
+                    <div id="terrain" class="yui-g">
+                        <h2>Terrains</h2>
+                        <table id="mainterrain">
+                            <tr><th>Combat Terrain</th><th>R1 Attacker</th><th>R2 Attacker</th><th>R3 Attacker</th><th>R4 Attacker</th><th>R5 Attacker</th><th>R1 Defender</th><th>R2 Defender</th><th>R3 Defender</th><th>R4 Defender</th><th>R5 Defender</th></tr>
+                        </table>
+                        <script type="text/javascript">main_terrain();</script>
+                    </div>
+                    <div class="yui-g">
+                        <!-- column left -->
+                        <div class="yui-u first">
+                            <div class="left">
+                                <h2>Attacker</h2> - Guard commitment on round: <select name="guard_attack"><option value="0">Never</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select> with shift: <select name="guard_attack_shift"><option value="1">+1</option><option value="2">+2</option></select>
+                                <table id="comatt">
+                                    <tr><th>Commander</th><th>Country</th><th>S</th><th>T</th><th>MT</th><th>S</th><th>M&nbsp;&nbsp;</th><th>R1&nbsp;</th><th>R2&nbsp;</th><th>R3&nbsp;</th><th>R4&nbsp;</th><th>R5&nbsp;</th><th><input type="button" onclick="addComAtt();" value="+" /></th></tr>
+                                </table>
+                                <table id="corpsatt" class="corps">
+                                    <tr><th>Corp</th><th>Country</th><th>G</th><th>A</th><th>I</th><th>M</th><th>C</th><th>Ck</th><th>Gr</th><th>Fi</th><th>Fc</th><th>M&nbsp;&nbsp;</th><th>O&nbsp;&nbsp;</th><th>R1&nbsp;</th><th>R2&nbsp;</th><th>R3&nbsp;</th><th>R4&nbsp;</th><th>R5&nbsp;</th><th><input type="button" onclick="addCorpAtt();" value="+" /></th></tr>
+                                </table>
+                            </div>
+                            <div id="att_side" class="yui-g withBorder">
+                                <h2>Relevant data</h2><br/>
+                                The armies have not been submitted
+                            </div>
+                        </div>
+                        <!-- column middle -->
+                        <div class="yui-u">
+                            <div class="left">
+                                <h2>Defender</h2> - Guard commitment on round: <select name="guard_defend"><option value="0">Never</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select> with shift: <select name="guard_defend_shift"><option value="1">+1</option><option value="2">+2</option></select>
+                                <table id="comdef">
+                                    <tr><th>Commander</th><th>Country</th><th>S</th><th>T</th><th>MT</th><th>S</th><th>M&nbsp;&nbsp;</th><th>R1&nbsp;</th><th>R2&nbsp;</th><th>R3&nbsp;</th><th>R4&nbsp;</th><th>R5&nbsp;</th><th><input type="button" onclick="addComDef();" value="+" /></th></tr>
+                                </table>
+                                <table id="corpsdef" class="corps">
+                                    <tr><th>Corp</th><th>Country</th><th>G</th><th>A</th><th>I</th><th>M</th><th>C</th><th>Ck</th><th>Gr</th><th>Fi</th><th>Fc</th><th>M&nbsp;&nbsp;</th><th>O&nbsp;&nbsp;</th><th>R1&nbsp;</th><th>R2&nbsp;</th><th>R3&nbsp;</th><th>R4&nbsp;</th><th>R5&nbsp;</th><th><input type="button" onclick="addCorpDef();" value="+" /></th></tr>
+                                </table>
+                            </div>
+                            <div id="df_side" class="yui-g withBorder">
+                                <h2>Relevant data</h2><br/>
+                                The armies have not been submitted
+                            </div>
+                        </div>                        
+                        <input type="hidden" name="att_corpnum" value="0" />
+                        <input type="hidden" name="att_comnum" value="0" />
+                        <input type="hidden" name="df_corpnum" value="0" />
+                        <input type="hidden" name="df_comnum" value="0" />
+                        <script type="text/javascript">addComAtt();addCorpAtt();addComDef();addCorpDef();</script>
+                    </div>
+                    <hr/>
+                    <div id="options" class="yui-g">
+                        <h2>Optional rules</h2>
+                        <table id="mainoptions">
+                            <tr><th>List of optional rules</th><th>&nbsp;</th><th>&nbsp;</th><th>&nbsp;</th><th>&nbsp;</th></tr>
+                            <tr><td><input type="checkbox" checked="checked" name="orcavsup"/>12.3.3.1 Cavalry superiority</td>
+                                <td><input type="checkbox" checked="checked" name="orcavwithdraw"/>12.3.3.2 Cavalry withdrawals</td>
+                                <td><input type="checkbox" checked="checked" name="orguard"/>12.3.4 Guard commitment</td>
+                                <td><input type="checkbox" checked="checked" name="orartillery"/>12.3.5 Artillery corps</td>
+                                <td><input type="checkbox" checked="checked" name="ortactical"/>12.3.7.2 Further tactical reductions</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <h2>Start!</h2><br/>
+                    Run <input type="text" name="iterations" value="100" maxlength="3" class="fieldlen3" /> iterations per tactics' combination. <button id="jformgo" type="submit" style="display: inline;">Start!</button>
+                    <br />
+                    <br />
+
+                    <h2>Result</h2><br/>
+                    Best tactic attacker: <span id="win_att"></span><br />
+                    Best tactic defender: <span id="win_def"></span>
+                    <div id="results" class="yui-g withBorder">
+                        <table width="100%">
+                            <tr><td>&nbsp;</td><td><b>Outflank</b></td><td><b>Assault</b></td><td><b>Escalated Assault</b></td><td><b>Echelon</b></td><td><b>Probe</b></td></tr>
+                            <tr class="even"><td><b>Outflank</b></td>                <td><div id="oo"></div></td><td><div id="ao"></div></td><td><div id="so"></div></td><td><div id="lo"></div></td><td><div id="po"></div></td></tr>
+                            <tr class="odd"><td><b>Counterattack</b></td>           <td><div id="oc"></div></td><td><div id="ac"></div></td><td><div id="sc"></div></td><td><div id="lc"></div></td><td><div id="pc"></div></td></tr>
+                            <tr class="even"><td><b>Escalated Counterattack</b></td> <td><div id="oe"></div></td><td><div id="ae"></div></td><td><div id="se"></div></td><td><div id="le"></div></td><td><div id="pe"></div></td></tr>
+                            <tr class="odd"><td><b>Cordon (no river)</b></td>       <td><div id="on"></div></td><td><div id="an"></div></td><td><div id="sn"></div></td><td><div id="ln"></div></td><td><div id="pn"></div></td></tr>
+                            <tr class="even"><td><b>Cordon (river)</b></td>          <td><div id="or"></div></td><td><div id="ar"></div></td><td><div id="sr"></div></td><td><div id="lr"></div></td><td><div id="pr"></div></td></tr>
+                            <tr class="odd"><td><b>Witdhdraw</b></td>               <td><div id="ow"></div></td><td><div id="aw"></div></td><td><div id="sw"></div></td><td><div id="lw"></div></td><td><div id="pw"></div></td></tr>
+                            <tr class="even"><td><b>Defend</b></td>                  <td><div id="od"></div></td><td><div id="ad"></div></td><td><div id="sd"></div></td><td><div id="ld"></div></td><td><div id="pd"></div></td></tr>
+                        </table>
+                    </div>
+
+                    <!-- combat logs -->
+                    <br />
+                    <h2>Combat logs</h2><br/>
+                    Below there is a summary of the combats, grouped by chits selected. You will find up to 10 random entries per group (depending on iterations run), as a sample of the actions and events that happen, in average, on the combat.<br/>
+                    <select id="logfilter" class="tacticsselect" onchange="filterLogs();">
+                        <option value="all" selected="selected">All (filter log by tactic)</option>
+                        <option value="oo">Outflank vs Outflank</option>
+                        <option value="oc">Outflank vs Counterattack</option>
+                        <option value="oe">Outflank vs Escalated Counterattack</option>
+                        <option value="on">Outflank vs Cordon</option>
+                        <option value="or">Outflank vs Cordon (river)</option>
+                        <option value="ow">Outflank vs Withdraw</option>
+                        <option value="od">Outflank vs Defend</option>
+                        <option value="ao">Assault vs Outflank</option>
+                        <option value="ac">Assault vs Counterattack</option>
+                        <option value="ae">Assault vs Escalated Counterattack</option>
+                        <option value="an">Assault vs Cordon</option>
+                        <option value="ar">Assault vs Cordon (river)</option>
+                        <option value="aw">Assault vs Withdraw</option>
+                        <option value="ad">Assault vs Defend</option>
+                        <option value="so">EscalatedAssault vs Outflank</option>
+                        <option value="sc">EscalatedAssault vs Counterattack</option>
+                        <option value="se">EscalatedAssault vs Escalated Counterattack</option>
+                        <option value="sn">EscalatedAssault vs Cordon</option>
+                        <option value="sr">EscalatedAssault vs Cordon (river)</option>
+                        <option value="sw">EscalatedAssault vs Withdraw</option>
+                        <option value="sd">EscalatedAssault vs Defend</option>
+                        <option value="lo">Echelon vs Outflank</option>
+                        <option value="lc">Echelon vs Counterattack</option>
+                        <option value="le">Echelon vs Escalated Counterattack</option>
+                        <option value="ln">Echelon vs Cordon</option>
+                        <option value="lr">Echelon vs Cordon (river)</option>
+                        <option value="lw">Echelon vs Withdraw</option>
+                        <option value="ld">Echelon vs Defend</option>
+                        <option value="po">Probe vs Outflank</option>
+                        <option value="pc">Probe vs Counterattack</option>
+                        <option value="pe">Probe vs Escalated Counterattack</option>
+                        <option value="pn">Probe vs Cordon</option>
+                        <option value="pr">Probe vs Cordon (river)</option>
+                        <option value="pw">Probe vs Withdraw</option>
+                        <option value="pd">Probe vs Defend</option>
+                    </select> <span id="log_msg" />
+                    <div id="logs" class="yui-g withBorder">
+                        <b>No simulation performed yet</b>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </lift:SimulatorTag.jform>
+</lift:surround>
